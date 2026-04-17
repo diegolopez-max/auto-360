@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+body { margin:0; background:#111; }
+#viewer {
+ width: 800px;
+ height: 500px;
+ background-size: contain;
+ background-repeat: no-repeat;
+ background-position: center;
+ cursor: grab;
+}
+</style>
+</head>
+<body>
+
+<div id="viewer"></div>
+
+<script>
+const totalFrames = 37; // CAMBIA ESTE NUMERO
+
+let currentFrame = 1;
+let isDragging = false;
+let startX = 0;
+
+const viewer = document.getElementById("viewer");
+
+function getFrame(frame) {
+ return "frames/frame_" + String(frame).padStart(2,"0") + ".png";
+}
+
+function updateFrame() {
+ viewer.style.backgroundImage = "url(" + getFrame(currentFrame) + ")";
+}
+
+updateFrame();
+
+viewer.addEventListener("mousedown", (e) => {
+ isDragging = true;
+ startX = e.clientX;
+});
+
+window.addEventListener("mouseup", () => {
+ isDragging = false;
+});
+
+window.addEventListener("mousemove", (e) => {
+ if (!isDragging) return;
+
+ let delta = e.clientX - startX;
+
+ if (Math.abs(delta) > 5) {
+  if (delta > 0) {
+   currentFrame = (currentFrame % totalFrames) + 1;
+  } else {
+   currentFrame = (currentFrame - 2 + totalFrames) % totalFrames + 1;
+  }
+  updateFrame();
+  startX = e.clientX;
+ }
+});
+</script>
+
+</body>
+</html>
